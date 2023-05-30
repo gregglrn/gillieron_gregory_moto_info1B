@@ -11,19 +11,19 @@
 						  Id
 						</th>
 						<th class="" >
-						  Nom
+						  Marque
 						</th>
 						<th class="" >
-						  Durée
+						  Modèle
 						</th>
 						<th class="" >
-						  Date de sortie
+						  Année
 						</th>
 						<th class="" >
-						  Description
+						  Nombre de Km
 						</th>
 						<th class="" >
-						  Affiche
+						  Prix
 						</th>
 					</tr>
 				</thead>
@@ -32,22 +32,22 @@
 			<tbody>
 				<tr>
 					  <th class="align-middle">
-						  {{ row.id_film }}
+						  {{ row.id_moto }}
 					  </th>
 					  <th class="align-middle">
-						{{ row.nom_film }}
+						{{ row.marque_moto }}
 					  </th>
 					  <th class="align-middle">
-						{{ row.duree_film|default("", True) }}
+						{{ row.modèle_moto|default("", True) }}
 					  </th>
 					  <th class="align-middle">
-						{{ row.date_sortie_film|default("", True) }}
+						{{ row.année_moto|default("", True) }}
 					  </th>
 					  <th class="align-middle">
-						{{ row.description_film|default("", True) }}
+						{{ row.nombre_km_moto|default("", True) }}
 					  </th>
 					  <th class="align-middle">
-						<img class="img" src={{ row.cover_link_film|default(None, True) }} style="border: 0;display:block; width:150px; max-height:auto;"  alt = "image masquée FFP8 (in COVID-19 Memory) (absente) mod 164">
+						{{ row.prix_moto }}
 					  </th>
 					  <th class="align-middle">
 						<a class="btn btn-primary" href="{{ url_for('film_add_wtf') }}" role="button">Ajouter</a>

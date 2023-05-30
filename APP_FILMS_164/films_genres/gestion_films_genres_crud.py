@@ -32,11 +32,11 @@ def films_genres_afficher(id_film_sel):
     if request.method == "GET":
         try:
             with DBconnection() as mc_afficher:
-                strsql_genres_films_afficher_data = """SELECT id_film, nom_film, duree_film, description_film, cover_link_film, date_sortie_film,
-                                                            GROUP_CONCAT(intitule_genre) as GenresFilms FROM t_genre_film
-                                                            RIGHT JOIN t_film ON t_film.id_film = t_genre_film.fk_film
-                                                            LEFT JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
-                                                            GROUP BY id_film"""
+                strsql_genres_films_afficher_data = """SELECT t_moto.id_moto, marque_moto, modèle_moto, année_moto, nombre_km_moto, prix_moto, GROUP_CONCAT(prenom_personne) AS 'PersonneMoto'
+                                                        FROM t_moto
+                                                        LEFT JOIN t_pers_moto ON t_moto.id_moto = t_pers_moto.fk_moto
+                                                        LEFT JOIN t_personne ON t_personne.id_personne = t_pers_moto.fk_personne
+                                                        GROUP BY t_moto.id_moto;"""
                 if id_film_sel == 0:
                     # le paramètre 0 permet d'afficher tous les films
                     # Sinon le paramètre représente la valeur de l'id du film
@@ -93,7 +93,7 @@ def edit_genre_film_selected():
     if request.method == "GET":
         try:
             with DBconnection() as mc_afficher:
-                strsql_genres_afficher = """SELECT id_genre, intitule_genre FROM t_genre ORDER BY id_genre ASC"""
+                strsql_genres_afficher = """SELECT id_personne, prenom_personne FROM t_personne ORDER BY id_personne ASC"""
                 mc_afficher.execute(strsql_genres_afficher)
             data_genres_all = mc_afficher.fetchall()
             print("dans edit_genre_film_selected ---> data_genres_all", data_genres_all)
@@ -221,11 +221,11 @@ def update_genre_film_selected():
 
             # SQL pour insérer une nouvelle association entre
             # "fk_film"/"id_film" et "fk_genre"/"id_genre" dans la "t_genre_film"
-            strsql_insert_genre_film = """INSERT INTO t_genre_film (id_genre_film, fk_genre, fk_film)
+            strsql_insert_genre_film = """INSERT INTO t_pers_moto (id_pers_moto, fk_personne, fk_moto)
                                                     VALUES (NULL, %(value_fk_genre)s, %(value_fk_film)s)"""
 
             # SQL pour effacer une (des) association(s) existantes entre "id_film" et "id_genre" dans la "t_genre_film"
-            strsql_delete_genre_film = """DELETE FROM t_genre_film WHERE fk_genre = %(value_fk_genre)s AND fk_film = %(value_fk_film)s"""
+            strsql_delete_genre_film = """DELETE FROM t_pers_moto WHERE fk_personne = %(value_fk_genre)s AND fk_moto = %(value_fk_film)s"""
 
             with DBconnection() as mconn_bd:
                 # Pour le film sélectionné, parcourir la liste des genres à INSÉRER dans la "t_genre_film".
@@ -276,20 +276,20 @@ def genres_films_afficher_data(valeur_id_film_selected_dict):
     print("valeur_id_film_selected_dict...", valeur_id_film_selected_dict)
     try:
 
-        strsql_film_selected = """SELECT id_film, nom_film, duree_film, description_film, cover_link_film, date_sortie_film, GROUP_CONCAT(id_genre) as GenresFilms FROM t_genre_film
-                                        INNER JOIN t_film ON t_film.id_film = t_genre_film.fk_film
-                                        INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
-                                        WHERE id_film = %(value_id_film_selected)s"""
+        strsql_film_selected = """SELECT id_moto, marque_moto, modèle_moto, année_moto, cover_link_film, nombre_km_moto, GROUP_CONCAT(id_personne) as 'PersonneMoto' FROM t_pers_moto
+                                        INNER JOIN t_moto ON t_moto.id_moto = t_pers_moto.fk_moto
+                                        INNER JOIN t_personne ON t_personne.id_personne = t_pers_moto.fk_personne
+                                        WHERE id_moto = %(value_id_film_selected)s"""
 
-        strsql_genres_films_non_attribues = """SELECT id_genre, intitule_genre FROM t_genre WHERE id_genre not in(SELECT id_genre as idGenresFilms FROM t_genre_film
-                                                    INNER JOIN t_film ON t_film.id_film = t_genre_film.fk_film
-                                                    INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
-                                                    WHERE id_film = %(value_id_film_selected)s)"""
+        strsql_genres_films_non_attribues = """SELECT id_personne, prenom_personne FROM t_personne WHERE id_personne not in(SELECT id_personne as idPersonneMoto FROM t_pers_moto
+                                                    INNER JOIN t_moto ON t_moto.id_moto = t_pers_moto.fk_moto
+                                                    INNER JOIN t_personne ON t_pers.id_personne = t_pers_moto.fk_personne
+                                                    WHERE id_moto = %(value_id_film_selected)s)"""
 
-        strsql_genres_films_attribues = """SELECT id_film, id_genre, intitule_genre FROM t_genre_film
-                                            INNER JOIN t_film ON t_film.id_film = t_genre_film.fk_film
-                                            INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
-                                            WHERE id_film = %(value_id_film_selected)s"""
+        strsql_genres_films_attribues = """SELECT id_moto, id_personne, prenom_personne FROM t_pers_moto
+                                            INNER JOIN t_moto ON t_moto.id_moto = t_pers_moto.fk_moto
+                                            INNER JOIN t_personne ON t_personne.id_personne = t_pers_moto.fk_personne
+                                            WHERE id_moto = %(value_id_film_selected)s"""
 
         # Du fait de l'utilisation des "context managers" on accède au curseur grâce au "with".
         with DBconnection() as mc_afficher:
