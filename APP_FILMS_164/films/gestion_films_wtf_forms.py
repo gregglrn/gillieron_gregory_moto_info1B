@@ -25,7 +25,7 @@ class FormWTFAddFilm(FlaskForm):
                                                                               "apostrophe, de double trait union")
                                                                ])
 
-    submit = SubmitField("Enregistrer film")
+    submit = SubmitField("Enregistrer la moto")
 
 
 class FormWTFUpdateFilm(FlaskForm):
@@ -34,22 +34,13 @@ class FormWTFUpdateFilm(FlaskForm):
         Définition d'un "bouton" submit avec un libellé personnalisé.
     """
 
-    nom_film_update_wtf = StringField("Clavioter le titre", widget=TextArea())
-    duree_film_update_wtf = IntegerField("Durée du film (minutes)", validators=[NumberRange(min=1, max=5000,
-                                                                                            message=u"Min %(min)d et "
-                                                                                                    u"max %(max)d "
-                                                                                                    u"Selon Wikipédia "
-                                                                                                    u"L'Incendie du "
-                                                                                                    u"monastère du "
-                                                                                                    u"Lotus rouge "
-                                                                                                    u"durée 1620 "
-                                                                                                    u"min")])
+    nom_film_update_wtf = StringField("Clavioter la marque de la moto", widget=TextArea())
+    duree_film_update_wtf = StringField("Clavioter le modèle de la moto", widget=TextArea())
 
-    description_film_update_wtf = StringField("Description du film ", widget=TextArea())
-    cover_link_film_update_wtf = StringField("Lien de l'affiche du film ", widget=TextArea())
-    datesortie_film_update_wtf = DateField("Date de sortie du film", validators=[InputRequired("Date obligatoire"),
-                                                                                 DataRequired("Date non valide")])
-    submit = SubmitField("Update film")
+    description_film_update_wtf = StringField("Nombre de KM de la moto ", widget=TextArea())
+    cover_link_film_update_wtf = StringField("Prix de la moto", widget=TextArea())
+    datesortie_film_update_wtf = StringField("Année de la moto", widget=TextArea())
+    submit = SubmitField("Update moto")
 
 
 class FormWTFDeleteFilm(FlaskForm):
@@ -61,7 +52,7 @@ class FormWTFDeleteFilm(FlaskForm):
         submit_btn_conf_del : Bouton de confirmation pour effacer un "film".
         submit_btn_annuler : Bouton qui permet d'afficher la table "t_film".
     """
-    nom_film_delete_wtf = StringField("Effacer ce film")
-    submit_btn_del_film = SubmitField("Effacer film")
+    nom_film_delete_wtf = StringField("Effacer cette moto")
+    submit_btn_del_film = SubmitField("Effacer moto")
     submit_btn_conf_del_film = SubmitField("Etes-vous sur d'effacer ?")
     submit_btn_annuler = SubmitField("Annuler")

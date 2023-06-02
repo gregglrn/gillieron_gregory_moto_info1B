@@ -36,7 +36,7 @@ def films_genres_afficher(id_film_sel):
                                                         FROM t_moto
                                                         LEFT JOIN t_pers_moto ON t_moto.id_moto = t_pers_moto.fk_moto
                                                         LEFT JOIN t_personne ON t_personne.id_personne = t_pers_moto.fk_personne
-                                                        GROUP BY t_moto.id_moto;"""
+                                                        GROUP BY t_moto.id_moto"""
                 if id_film_sel == 0:
                     # le paramètre 0 permet d'afficher tous les films
                     # Sinon le paramètre représente la valeur de l'id du film
@@ -46,7 +46,7 @@ def films_genres_afficher(id_film_sel):
                     valeur_id_film_selected_dictionnaire = {"value_id_film_selected": id_film_sel}
                     # En MySql l'instruction HAVING fonctionne comme un WHERE... mais doit être associée à un GROUP BY
                     # L'opérateur += permet de concaténer une nouvelle valeur à la valeur de gauche préalablement définie.
-                    strsql_genres_films_afficher_data += """ HAVING id_film= %(value_id_film_selected)s"""
+                    strsql_genres_films_afficher_data += """ HAVING id_moto = %(value_id_film_selected)s"""
 
                     mc_afficher.execute(strsql_genres_films_afficher_data, valeur_id_film_selected_dictionnaire)
 
@@ -56,12 +56,12 @@ def films_genres_afficher(id_film_sel):
 
                 # Différencier les messages.
                 if not data_genres_films_afficher and id_film_sel == 0:
-                    flash("""La table "t_film" est vide. !""", "warning")
+                    flash("""La table "t_moto" est vide. !""", "warning")
                 elif not data_genres_films_afficher and id_film_sel > 0:
                     # Si l'utilisateur change l'id_film dans l'URL et qu'il ne correspond à aucun film
-                    flash(f"Le film {id_film_sel} demandé n'existe pas !!", "warning")
+                    flash(f"La moto {id_film_sel} demandé n'existe pas !!", "warning")
                 else:
-                    flash(f"Données films et genres affichés !!", "success")
+                    flash(f"Données motos et personne affichés !!", "success")
 
         except Exception as Exception_films_genres_afficher:
             raise ExceptionFilmsGenresAfficher(f"fichier : {Path(__file__).name}  ;  {films_genres_afficher.__name__} ;"
@@ -121,20 +121,20 @@ def edit_genre_film_selected():
                 genres_films_afficher_data(valeur_id_film_selected_dictionnaire)
 
             print(data_genre_film_selected)
-            lst_data_film_selected = [item['id_film'] for item in data_genre_film_selected]
+            lst_data_film_selected = [item['id_moto'] for item in data_genre_film_selected]
             print("lst_data_film_selected  ", lst_data_film_selected,
                   type(lst_data_film_selected))
 
             # Dans le composant "tags-selector-tagselect" on doit connaître
             # les genres qui ne sont pas encore sélectionnés.
-            lst_data_genres_films_non_attribues = [item['id_genre'] for item in data_genres_films_non_attribues]
+            lst_data_genres_films_non_attribues = [item['id_personne'] for item in data_genres_films_non_attribues]
             session['session_lst_data_genres_films_non_attribues'] = lst_data_genres_films_non_attribues
             print("lst_data_genres_films_non_attribues  ", lst_data_genres_films_non_attribues,
                   type(lst_data_genres_films_non_attribues))
 
             # Dans le composant "tags-selector-tagselect" on doit connaître
             # les genres qui sont déjà sélectionnés.
-            lst_data_genres_films_old_attribues = [item['id_genre'] for item in data_genres_films_attribues]
+            lst_data_genres_films_old_attribues = [item['id_personne'] for item in data_genres_films_attribues]
             session['session_lst_data_genres_films_old_attribues'] = lst_data_genres_films_old_attribues
             print("lst_data_genres_films_old_attribues  ", lst_data_genres_films_old_attribues,
                   type(lst_data_genres_films_old_attribues))
@@ -147,7 +147,7 @@ def edit_genre_film_selected():
 
             # Extrait les valeurs contenues dans la table "t_genres", colonne "intitule_genre"
             # Le composant javascript "tagify" pour afficher les tags n'a pas besoin de l'id_genre
-            lst_data_genres_films_non_attribues = [item['intitule_genre'] for item in data_genres_films_non_attribues]
+            lst_data_genres_films_non_attribues = [item['prenom_personne'] for item in data_genres_films_non_attribues]
             print("lst_all_genres gf_edit_genre_film_selected ", lst_data_genres_films_non_attribues,
                   type(lst_data_genres_films_non_attribues))
 
@@ -276,14 +276,14 @@ def genres_films_afficher_data(valeur_id_film_selected_dict):
     print("valeur_id_film_selected_dict...", valeur_id_film_selected_dict)
     try:
 
-        strsql_film_selected = """SELECT id_moto, marque_moto, modèle_moto, année_moto, cover_link_film, nombre_km_moto, GROUP_CONCAT(id_personne) as 'PersonneMoto' FROM t_pers_moto
+        strsql_film_selected = """SELECT id_moto, marque_moto, modèle_moto, année_moto, prix_moto, nombre_km_moto, GROUP_CONCAT(id_personne) as 'PersonneMoto' FROM t_pers_moto
                                         INNER JOIN t_moto ON t_moto.id_moto = t_pers_moto.fk_moto
                                         INNER JOIN t_personne ON t_personne.id_personne = t_pers_moto.fk_personne
                                         WHERE id_moto = %(value_id_film_selected)s"""
 
         strsql_genres_films_non_attribues = """SELECT id_personne, prenom_personne FROM t_personne WHERE id_personne not in(SELECT id_personne as idPersonneMoto FROM t_pers_moto
                                                     INNER JOIN t_moto ON t_moto.id_moto = t_pers_moto.fk_moto
-                                                    INNER JOIN t_personne ON t_pers.id_personne = t_pers_moto.fk_personne
+                                                    INNER JOIN t_personne ON t_personne.id_personne = t_pers_moto.fk_personne
                                                     WHERE id_moto = %(value_id_film_selected)s)"""
 
         strsql_genres_films_attribues = """SELECT id_moto, id_personne, prenom_personne FROM t_pers_moto
