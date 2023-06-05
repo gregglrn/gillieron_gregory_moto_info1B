@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %} Editer un Moto (WTF) {% endblock %}
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p>
+				Editer une MOTO
+			</p>
+			<form action="" method="POST" novalidate>
+				<!-- Protection contre les attaques Cross-Site Request Forgery (CSRF) -->
+				{{ form_update_moto.hidden_tag() }}
+				<div class="form-group">
+					<p>
+						{{ form_update_moto.modèle_moto_update_wtf.label }}<br>
+						{{ form_update_moto.modèle_moto_update_wtf(cols=50, rows=3) }}<br>
+						{% for error in form_update_moto.modèle_moto_update_wtf.errors %}
+						<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
+					</p>
+					<p>
+						{{ form_update_moto.année_moto_update_wtf.label }}<br>
+						{{ form_update_moto.année_moto_update_wtf(size=32) }}<br>
+						{% for error in form_update_moto.année_moto_update_wtf.errors %}
+						<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
+					</p>
+					<p>
+						{{ form_update_moto.couleur_moto_update_wtf.label }}<br>
+						{{ form_update_moto.couleur_moto_update_wtf(cols=50, rows=10) }}<br>
+						{% for error in form_update_moto.couleur_moto_update_wtf.errors %}
+						<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
+					</p>
+					<p>
+						{{ form_update_moto.prix_moto_update_wtf.label }}<br>
+						{{ form_update_moto.prix_moto_update_wtf(cols=100, rows=10) }}<br>
+						{% for error in form_update_moto.prix_moto_update_wtf.errors %}
+						<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
+					</p>
+					<p>
+						{{ form_update_moto.nombre_km_moto_update_wtf.label }}<br>
+						{{ form_update_moto.nombre_km_moto_update_wtf(size=12) }}<br>
+						{% for error in form_update_moto.nombre_km_moto_update_wtf.errors %}
+						<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
+					</p>
+				</div>
+				{{ form_update_moto.submit(class="btn btn-primary") }}
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
