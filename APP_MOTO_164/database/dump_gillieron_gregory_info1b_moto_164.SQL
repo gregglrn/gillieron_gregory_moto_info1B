@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- Hôte :                        localhost
+-- Hôte :                        127.0.0.1
 -- Version du serveur:           5.7.40 - MySQL Community Server (GPL)
 -- SE du serveur:                Win32
 -- HeidiSQL Version:             10.2.0.5599
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `t_adresse` (
 -- Listage de la structure de la table gillieron_gregory_bd_info1b. t_entrepot
 CREATE TABLE IF NOT EXISTS `t_entrepot` (
   `id_entrepot` int(11) NOT NULL AUTO_INCREMENT,
-  `place_entrepot` varchar(50) DEFAULT NULL,
+  `place_entrepot` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_entrepot`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -58,12 +58,20 @@ CREATE TABLE IF NOT EXISTS `t_marque` (
   `marque_moto` varchar(50) DEFAULT NULL,
   `type_moto` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_marque`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
--- Listage des données de la table gillieron_gregory_bd_info1b.t_marque : 1 rows
+-- Listage des données de la table gillieron_gregory_bd_info1b.t_marque : 6 rows
 /*!40000 ALTER TABLE `t_marque` DISABLE KEYS */;
 INSERT INTO `t_marque` (`id_marque`, `marque_moto`, `type_moto`) VALUES
-	(5, 'yamaha', NULL);
+	(6, 'kawasaki', 'Sportive'),
+	(5, 'yamaha', 'Roadster'),
+	(7, 'honda', 'Roadster'),
+	(8, 'ducati', 'Sportive'),
+	(9, 'triumph', 'Roadster'),
+	(10, 'ktm', 'Sportive'),
+	(13, 'yamaha', 'supermot'),
+	(14, 'yamaha', 'Sportive'),
+	(15, 'bmw', 'Sportive');
 /*!40000 ALTER TABLE `t_marque` ENABLE KEYS */;
 
 -- Listage de la structure de la table gillieron_gregory_bd_info1b. t_marque_moto
@@ -74,28 +82,44 @@ CREATE TABLE IF NOT EXISTS `t_marque_moto` (
   PRIMARY KEY (`id_marque_moto`),
   KEY `FK_t_marque_moto_t_marque` (`fk_marque`),
   KEY `FK_t_marque_moto_t_moto` (`fk_moto`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
--- Listage des données de la table gillieron_gregory_bd_info1b.t_marque_moto : 0 rows
+-- Listage des données de la table gillieron_gregory_bd_info1b.t_marque_moto : 1 rows
 /*!40000 ALTER TABLE `t_marque_moto` DISABLE KEYS */;
+INSERT INTO `t_marque_moto` (`id_marque_moto`, `fk_marque`, `fk_moto`) VALUES
+	(14, 10, 10),
+	(13, 5, 9),
+	(15, 6, 12),
+	(16, 6, 13),
+	(17, 10, 14),
+	(18, 15, 15),
+	(19, 13, 16),
+	(20, 13, 11);
 /*!40000 ALTER TABLE `t_marque_moto` ENABLE KEYS */;
 
 -- Listage de la structure de la table gillieron_gregory_bd_info1b. t_moto
 CREATE TABLE IF NOT EXISTS `t_moto` (
   `id_moto` int(11) NOT NULL AUTO_INCREMENT,
   `modèle_moto` varchar(50) DEFAULT NULL,
-  `année_moto` int(11) DEFAULT NULL,
+  `année_moto` year(4) DEFAULT NULL,
   `nombre_km_moto` varchar(50) DEFAULT NULL,
-  `prix_moto` float DEFAULT NULL,
+  `prix_moto` varchar(50) DEFAULT NULL,
   `état_moto` varchar(50) DEFAULT NULL,
   `couleur_moto` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_moto`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 -- Listage des données de la table gillieron_gregory_bd_info1b.t_moto : ~0 rows (environ)
 /*!40000 ALTER TABLE `t_moto` DISABLE KEYS */;
 INSERT INTO `t_moto` (`id_moto`, `modèle_moto`, `année_moto`, `nombre_km_moto`, `prix_moto`, `état_moto`, `couleur_moto`) VALUES
-	(5, 'aaa', NULL, NULL, NULL, NULL, NULL);
+	(9, 'MT-125', '2021', '10000km', '12000.-', NULL, 'Noir'),
+	(10, 'DUKE-125', '2023', '0km', '4999.-', NULL, 'Orange'),
+	(11, 'YZF-R7', '2022', '10000km', '12000.-', NULL, 'Bleu'),
+	(12, 'H2', '2022', '6468km', '18099.-', NULL, 'vert'),
+	(13, 'Z900', '2020', '0km', '16899.-', NULL, 'Noir'),
+	(14, 'RC125', '2022', '0km', '4999.-', NULL, 'blanc'),
+	(15, 'S1000RR', '2019', '1942km', '32000.-', NULL, 'Bleu'),
+	(16, 'YZF-R1', '2022', '0km', '19999.-', NULL, 'Bleu');
 /*!40000 ALTER TABLE `t_moto` ENABLE KEYS */;
 
 -- Listage de la structure de la table gillieron_gregory_bd_info1b. t_moto_entrepot
@@ -173,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `t_pers_moto` (
   KEY `fk_moto` (`fk_moto`),
   CONSTRAINT `FK_t_pers_moto_t_moto` FOREIGN KEY (`fk_moto`) REFERENCES `t_moto` (`id_moto`),
   CONSTRAINT `FK_t_pers_moto_t_personne` FOREIGN KEY (`fk_personne`) REFERENCES `t_personne` (`id_personne`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Listage des données de la table gillieron_gregory_bd_info1b.t_pers_moto : ~0 rows (environ)
 /*!40000 ALTER TABLE `t_pers_moto` DISABLE KEYS */;
@@ -198,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `t_pers_telephone` (
 -- Listage de la structure de la table gillieron_gregory_bd_info1b. t_telephone
 CREATE TABLE IF NOT EXISTS `t_telephone` (
   `id_telephone` int(11) NOT NULL AUTO_INCREMENT,
-  `numero_telephone_personne` int(11) DEFAULT NULL,
+  `telephone_personne` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_telephone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

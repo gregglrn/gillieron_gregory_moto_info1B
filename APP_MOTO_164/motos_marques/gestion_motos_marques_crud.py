@@ -32,7 +32,7 @@ def motos_marques_afficher(id_moto_sel):
     if request.method == "GET":
         try:
             with DBconnection() as mc_afficher:
-                strsql_marques_Motos_afficher_data = """SELECT t_moto.id_moto, modèle_moto, année_moto, nombre_km_moto,couleur_moto, prix_moto, GROUP_CONCAT(marque_moto) AS 'MarqueMoto'
+                strsql_marques_Motos_afficher_data = """SELECT t_moto.id_moto, modèle_moto, année_moto, nombre_km_moto,couleur_moto, prix_moto, GROUP_CONCAT(marque_moto) AS 'MarqueMoto', GROUP_CONCAT(type_moto) AS 'TypeMoto'
                                                         FROM t_moto
                                                         LEFT JOIN t_marque_moto ON t_moto.id_moto = t_marque_moto.fk_moto
                                                         LEFT JOIN t_marque ON t_marque.id_marque = t_marque_moto.fk_marque
